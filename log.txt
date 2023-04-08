@@ -1,0 +1,48 @@
+Перед каждым сообщением из log выводится префикс, на формирование этого вывода вляют константы. При указании данных флагов меняется поведение вывода log.
+Ldate -- дата в локальной зоне, Ltime -- время в локальной зоне, Lmicroseconds -- дополняет выводом микросекунд(для этого флага требуются Ltime), Llongfile -- полное имя файла(с абсолютным путем) и строка в файле, Lshortfile -- имя файла и строка, LUTC -- если указаны Ldate или Ltime выводит UTC, Lmsgprefix -- переносим "prefix" из начала строки в положение перед сообщением, LstFlags -- начальное сообщение о логировние.
+ Эти флаги определяют какой текст должен идти перед сообщением в log.
+func Fatal(v ...any) -- совмещает Print и os.Exit(1)
+func Fatalf(format string, v ...any) -- Printf, os.Exit(1)
+func Fatalln(v ...any) Println(), os.Exit(1)
+func Flags()int -- возвращает флаги вывода для стандартного логгера.
+func Output(calldepth int, s string) error -- записывает выходные данные для logging event. s содержит текст для печати после префикса, указанного флагами Logger. Новая строка добавляется если последним символом в s не был cимвол новой строки. Глубина вызова -- количество кадров, которые нужно пропустить при вычислении имени файла и номера строки
+func Panic(v ...any) Print, panic()
+func Panicf(format string, v ...any) Printf() panic()
+func Panicln(v ...any) Println() panic()
+func Prefix() string выводит префикс для стандартного logger.
+func Print(v ...any) вызывает Output для печати в стандартный logger. Аргументы обрабатываются как в fmt.Print
+func Printf(format string, v ...any) -- вызывает Output для печати. Обрабатывает аргументы как fmt.Printf
+func Println(v ...any)
+func SetFlags(flag int) устанавливает флаги для логгирования.
+func SetOutput(w io.Writer) -- переопределяет вывод лога.
+func SetPrefix(prefix string)
+func Writer() io.Writer -- возвращает вывод
+
+type Logger struct{
+Cодержит фильтуемые или неэкспортируемые поля(поля которые структура которые не видны вне этого пакета, и доступ к ним можно полуыить с помощью экспортируемых методов)
+}
+Logger предоставляет собой активный объект ведения журнала, который генерирует строки вывода для io.Writer. Каждая опреация регистации делает один вызов метода Write  интерфейса Writer. Logger можно использовать из нескольких горутин, это наранитирует сериализацию доступа к Writer.
+buf bytes.Buffer
+logger = log.New(&buf, "logger: ", log.Lshortfile)// создаем логер который выводит сообщения в буффер а также оснащен флагом
+logger.Print("Hello, log file!")
+fmt.Print(&buf)
+
+func Default() *Logger -- возвращает стандартный лог, используемый package-level вывод функции.
+func New(out io.Writer, prefix string, flag int) *Logger // создает новый Logger
+func (l *Logger) Fatal(v ...any) -- эквивалентно Print() and os.Exit(1)
+func (l *Logger) Fatalf(format string, v ...any) Printf os.Exit(1)
+func (l *Logger) Fatalln(v ...any) Println, os.Exit(1)
+func (l *Logger) Flags() int -- возвращает флаги установленные на Logger
+func (l *Logger) Output(calldepth int, s string) error
+func (l *Logger) Panic(v ...any)
+func (l *Logger) Panicf(format string, v ...any)
+func (l *Logger) Panicln(v ...any)
+func (l *Logger) Prefix() string
+func (l *Logger) Print(v ...any)
+func (l *Logger) Printf(format string, v ...any)
+func (l *Logger) Println(v ...any)
+func (l *Logger) SetFlags(flag int)
+func (l *Logger) SetOutput(w io.Writer)
+func (l *Logger) SetPrefix(prefix string)
+func (l *Logger) Writer() io.Writer
+
